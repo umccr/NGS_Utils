@@ -98,8 +98,8 @@ class BaseBatch:
         self.rna_samples = list(rna_samples) if rna_samples else []
 
         self.somatic_vcf = somatic_vcf
-        self.germline_vcf = somatic_vcf
-        self.sv_vcf = germline_vcf
+        self.germline_vcf = germline_vcf
+        self.sv_vcf = sv_vcf
 
         self.somatic_caller = None
         self.germline_caller = None
