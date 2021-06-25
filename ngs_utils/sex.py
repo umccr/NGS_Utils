@@ -3,13 +3,13 @@ import pybedtools
 from os.path import join, dirname, abspath
 from pybedtools import BedTool
 
-from ngs_utils.bed_utils import filter_bed_with_gene_set, sort_bed, get_total_bed_size
-from ngs_utils.logger import err, info, debug, critical, warn
-from ngs_utils.file_utils import verify_file, safe_mkdir, file_transaction, can_reuse
-from ngs_utils.parallel import parallel_view, ParallelCfg
-from ngs_utils.reporting.reporting import get_val, get_float_val, get_int_val
-from ngs_utils.sambamba import index_bam, sambamba_depth
-import ngs_utils.reference_data as ref
+from .bed_utils import filter_bed_with_gene_set, sort_bed, get_total_bed_size
+from .logger import err, info, debug, critical, warn
+from .file_utils import verify_file, safe_mkdir, file_transaction, can_reuse
+from .parallel import parallel_view, ParallelCfg
+from .reporting.reporting import get_val, get_float_val, get_int_val
+from .sambamba import index_bam, sambamba_depth
+.reference_data as ref
 
 
 def get_gender(genome, bam_fpath, bed_fpath, sample, avg_depth):

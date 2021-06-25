@@ -14,8 +14,8 @@ import contextlib
 import fnmatch
 import time
 
-from ngs_utils.logger import info, err, warn, critical, debug
-from ngs_utils.utils import is_sequence, is_string
+from .logger import info, err, warn, critical, debug
+from .utils import is_sequence, is_string
 
 
 def safe_mkdir(dirpath, descriptive_name=''):

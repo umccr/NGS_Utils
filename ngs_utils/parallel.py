@@ -5,9 +5,9 @@ import subprocess
 from cluster_helper.cluster import ClusterView as CV
 from joblib import Parallel, delayed
 
-from ngs_utils.file_utils import safe_mkdir
-from ngs_utils.logger import debug, err
-from ngs_utils.utils import is_cluster
+from .file_utils import safe_mkdir
+from .logger import debug, err
+from .utils import is_cluster
 
 
 class ParallelCfg:

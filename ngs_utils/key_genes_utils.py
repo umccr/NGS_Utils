@@ -1,14 +1,14 @@
 from os.path import isfile
 from traceback import print_exc
 
-from ngs_utils.logger import critical
+from .logger import critical
 
 
 def get_bed_genes(bed_fpath):
     """ Returns a list from the 4th column of a bed file
     """
     try:  # to allow optional pybedtools
-        from ngs_utils.bed_utils import get_genes_from_bed
+        from .bed_utils import get_genes_from_bed
     except ImportError:
         print_exc()
         critical('Please, install pybedtools (conda install -c bioconda -y pybedtools)')
@@ -43,7 +43,7 @@ def get_target_genes(genome, bed_file=None, get_key_genes_file=None):
 
 def is_small_target(bed_file=None):
     try:  # to allow optional pybedtools
-        from ngs_utils.bed_utils import get_total_bed_size
+        from .bed_utils import get_total_bed_size
     except ImportError:
         print_exc()
         critical('Please, install pybedtools (conda install -c bioconda -y pybedtools)')

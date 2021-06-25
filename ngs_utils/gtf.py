@@ -3,8 +3,8 @@ import tempfile
 import os
 import random
 import gzip
-from ngs_utils.file_utils import file_exists, file_transaction
-from ngs_utils.logger import debug
+from .file_utils import file_exists, file_transaction
+from .logger import debug
 
 
 def guess_infer_extent(gtf_file):

@@ -6,8 +6,8 @@ import os
 import subprocess
 from os.path import isfile, exists
 
-from ngs_utils.file_utils import file_transaction, verify_file
-from ngs_utils.logger import info, err, warn
+from .file_utils import file_transaction, verify_file
+from .logger import info, err, warn
 
 
 def run_simple(cmd, silent=False):

@@ -2,9 +2,9 @@ from contextlib import contextmanager
 from traceback import format_exc
 import yaml
 
-from ngs_utils.logger import info, err, critical, debug, warn
-from ngs_utils.file_utils import verify_file
-from ngs_utils.utils import update_dict
+from .logger import info, err, critical, debug, warn
+from .file_utils import verify_file
+from .utils import update_dict
 
 
 def _load_yaml(fname):

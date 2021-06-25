@@ -1,7 +1,7 @@
 from os.path import basename, splitext
 import pysam
-from ngs_utils.file_utils import verify_file, adjust_path
-from ngs_utils.logger import critical, err
+from .file_utils import verify_file, adjust_path
+from .logger import critical, err
 
 
 def verify_bam(fpath, description='', is_critical=False, silent=False):

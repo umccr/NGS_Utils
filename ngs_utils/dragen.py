@@ -7,9 +7,9 @@ import yaml
 from os import listdir
 from os.path import join, abspath, pardir, splitext, basename, dirname, realpath, isdir, isfile, exists
 
-from ngs_utils.file_utils import adjust_path, verify_dir, file_exists, safe_mkdir, verify_file, add_suffix
-from ngs_utils.logger import critical, debug, info, err, warn
-from ngs_utils.Sample import BaseSample, BaseBatch, BaseProject
+from .file_utils import adjust_path, verify_dir, file_exists, safe_mkdir, verify_file, add_suffix
+from .logger import critical, debug, info, err, warn
+from .Sample import BaseSample, BaseBatch, BaseProject
 from natsort import natsort_keygen
 
 

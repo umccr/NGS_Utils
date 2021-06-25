@@ -4,10 +4,10 @@ from genericpath import exists
 from os.path import splitext, basename, join, isfile, isdir, abspath, realpath, islink
 
 import re
-from ngs_utils import logger
-from ngs_utils.bam_utils import verify_bam
-from ngs_utils.file_utils import verify_file, adjust_path, splitext_plus, safe_mkdir, file_exists
-from ngs_utils.logger import info, critical, err, debug
+from  import logger
+from .bam_utils import verify_bam
+from .file_utils import verify_file, adjust_path, splitext_plus, safe_mkdir, file_exists
+from .logger import info, critical, err, debug
 
 
 def read_samples(args):

@@ -5,13 +5,13 @@ import os
 from os.path import isfile, join, abspath, basename, dirname, getctime, getmtime, splitext, realpath
 from subprocess import check_output
 
-from ngs_utils.call_process import run
-from ngs_utils import call_process
-from ngs_utils.file_utils import intermediate_fname, iterate_file, splitext_plus, verify_file, adjust_path, add_suffix, \
+from .call_process import run
+from  import call_process
+from .file_utils import intermediate_fname, iterate_file, splitext_plus, verify_file, adjust_path, add_suffix, \
     safe_mkdir, file_transaction, which, file_exists, open_gzipsafe, can_reuse
-from ngs_utils.logger import info, critical, warn, err, debug
-from ngs_utils import reference_data as ref
-from ngs_utils.utils import md5
+from .logger import info, critical, warn, err, debug
+from  import reference_data as ref
+from .utils import md5
 
 
 def get_chrom_order(genome=None, fai_fpath=None):

@@ -6,13 +6,13 @@ import yaml
 from os import listdir
 from os.path import join, abspath, pardir, splitext, basename, dirname, realpath, isdir, isfile, exists
 
-from ngs_utils.Sample import BaseSample, BaseBatch, BaseProject
-from ngs_utils.bam_utils import verify_bam
-from ngs_utils.call_process import run, run_simple
-from ngs_utils.config import load_yaml_config
-from ngs_utils.file_utils import adjust_path, verify_dir, file_exists, safe_mkdir, verify_file, add_suffix
-from ngs_utils.logger import critical, debug, info, err, warn
-from ngs_utils.key_genes_utils import get_target_genes, is_small_target
+from .Sample import BaseSample, BaseBatch, BaseProject
+from .bam_utils import verify_bam
+from .call_process import run, run_simple
+from .config import load_yaml_config
+from .file_utils import adjust_path, verify_dir, file_exists, safe_mkdir, verify_file, add_suffix
+from .logger import critical, debug, info, err, warn
+from .key_genes_utils import get_target_genes, is_small_target
 
 
 CALLER_PRIORITY = ['ensemble', 'strelka2', 'vardict', 'gatk-haplotype']

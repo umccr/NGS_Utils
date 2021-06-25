@@ -6,9 +6,9 @@ import sys
 
 from pybedtools import BedTool
 
-from ngs_utils.call_process import run
-from ngs_utils.file_utils import verify_file, splitext_plus, which, can_reuse
-from ngs_utils.logger import debug, warn, err, critical
+from .call_process import run
+from .file_utils import verify_file, splitext_plus, which, can_reuse
+from .logger import debug, warn, err, critical
 
 
 def get_executable():

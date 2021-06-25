@@ -9,7 +9,7 @@ import traceback
 from subprocess import check_output
 from os.path import exists, getctime
 
-from ngs_utils.utils import is_local, hostname
+from .utils import is_local, hostname
 
 
 log_fpath = None

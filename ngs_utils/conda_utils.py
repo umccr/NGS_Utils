@@ -1,7 +1,7 @@
 from os.path import join, abspath, dirname, pardir, exists, isdir
 import sys
 
-from ngs_utils.logger import critical
+from .logger import critical
 
 
 def secondary_conda_env(env_name='pcgr', is_critical=False):

@@ -7,8 +7,8 @@ import sys
 from datetime import datetime
 from glob import glob
 
-from ngs_utils.file_utils import verify_dir, verify_file, safe_mkdir
-from ngs_utils.utils import is_travis
+from .file_utils import verify_dir, verify_file, safe_mkdir
+from .utils import is_travis
 
 
 def echo(msg=''):

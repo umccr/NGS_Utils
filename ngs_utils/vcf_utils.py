@@ -1,10 +1,10 @@
 import re
 import subprocess
 import sys
-from ngs_utils.logger import critical
-from ngs_utils.file_utils import open_gzipsafe
-from ngs_utils.call_process import run_simple
-from ngs_utils.file_utils import get_ungz_gz
+from .logger import critical
+from .file_utils import open_gzipsafe
+from .call_process import run_simple
+from .file_utils import get_ungz_gz
 
 
 def get_sample_names(
