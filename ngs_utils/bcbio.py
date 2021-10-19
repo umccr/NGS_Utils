@@ -537,18 +537,7 @@ class BcbioProject(BaseProject):
                 self.samples.append(s)
 
         if not self.samples:
-            if exclude_samples:
-                critical(f'Error: no samples left with the exclusion of '
-                         f'batch/sample name(s): {", ".join(exclude_samples)}\n'
-                         f'Available samples from the YAML file {self.bcbio_yaml_fpath}:\n'
-                         f'{", ".join(all_sample_names)}\nbatches: {", ".join(all_batch_names)}')
-            if include_samples:
-                critical(f'Error: could not find a batch or a sample with the name(s): '
-                         f'{", ".join(include_samples)}\n'
-                         f'Available samples from the YAML file {self.bcbio_yaml_fpath}:\n'
-                         f'{", ".join(all_sample_names)}\nbatches: {", ".join(all_batch_names)}')
-            critical(f'Error: could not parse any batch or samples in the bcbio project. '
-                     f'Please check the bcbio YAML file: {self.bcbio_yaml_fpath}')
+            return
 
         not_found_samples = [s.name for s in self.samples if not s.bam]
         if not_found_samples:
