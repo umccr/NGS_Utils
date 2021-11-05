@@ -62,11 +62,12 @@ class DragenBatch(BaseBatch):
         qc_files_shared = [
             '.vc_metrics.csv',
             '.ploidy_estimation_metrics.csv',
-            '.mapping_metrics.csv',
-            '.fragment_length_hist.csv',
+            '.fastqc_metrics.csv',
         ]
         qc_files_tumour = [
             *qc_files_shared,
+            '.fragment_length_hist.csv',
+            '.mapping_metrics.csv',
             '.wgs_fine_hist_tumor.csv',
             '.wgs_coverage_metrics_tumor.csv',
             '.wgs_contig_mean_cov_tumor.csv',
