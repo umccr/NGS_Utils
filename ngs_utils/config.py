@@ -9,7 +9,7 @@ from .utils import update_dict
 
 def _load_yaml(fname):
     with open(fname) as in_handle:
-        config = yaml.load(in_handle, Loader=yaml.FullLoader)
+        config = yaml.safe_load(in_handle)
     return config
 
 
