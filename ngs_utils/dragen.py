@@ -23,19 +23,19 @@ class DragenSample(BaseSample):
 
 
 class DragenBatch(BaseBatch):
-    def __init__(self, rgsm_t, rgsm_n, tumour_normal_base_dir, normal_base_dir, **kwargs):
+    def __init__(self, rgsm_t, rgsm_n, tumor_normal_base_dir, normal_base_dir, **kwargs):
         BaseBatch.__init__(self, **kwargs)
         self.somatic_caller = 'dragen'
         self.germline_caller = 'dragen'
         self.sv_caller = 'dragen'
         self.rgsm_t = rgsm_t
         self.rgsm_n = rgsm_n
-        self.tumour_normal_base_dir = tumour_normal_base_dir
+        self.tumor_normal_base_dir = tumor_normal_base_dir
         self.normal_base_dir = normal_base_dir
         self.batch_qc_files = []
 
     def find_somatic_vcf(self, silent=False):
-        somatic_vcf = str(self.tumour_normal_base_dir / f'{self.rgsm_t}.hard-filtered.vcf.gz')
+        somatic_vcf = str(self.tumor_normal_base_dir / f'{self.rgsm_t}.hard-filtered.vcf.gz')
         if isfile(somatic_vcf):
             verify_file(somatic_vcf, is_critical=True)
             if not silent:
@@ -51,7 +51,7 @@ class DragenBatch(BaseBatch):
             self.germline_vcf = germline_vcf
 
     def find_sv_vcf(self, silent=False):
-        sv_vcf = str(self.tumour_normal_base_dir / f'{self.rgsm_t}.sv.vcf.gz')
+        sv_vcf = str(self.tumor_normal_base_dir / f'{self.rgsm_t}.sv.vcf.gz')
         if isfile(sv_vcf):
             verify_file(sv_vcf, is_critical=True)
             if not silent:
@@ -64,7 +64,7 @@ class DragenBatch(BaseBatch):
             '.ploidy_estimation_metrics.csv',
             '.fastqc_metrics.csv',
         ]
-        qc_files_tumour = [
+        qc_files_tumor = [
             *qc_files_shared,
             '.fragment_length_hist.csv',
             '.mapping_metrics.csv',
@@ -79,8 +79,8 @@ class DragenBatch(BaseBatch):
             '.wgs_contig_mean_cov.csv',
         ]
         # Construct full path of QC files and store
-        for qc_file_suffix in qc_files_tumour:
-            qc_file = self.tumour_normal_base_dir / f'{self.rgsm_t}{qc_file_suffix}'
+        for qc_file_suffix in qc_files_tumor:
+            qc_file = self.tumor_normal_base_dir / f'{self.rgsm_t}{qc_file_suffix}'
             assert qc_file.exists()
             self.tumors[0].qc_files.append(str(qc_file))
         for qc_file_suffix in qc_files_normal:
@@ -93,7 +93,7 @@ class DragenBatch(BaseBatch):
 
     def add_tumor(self, rgid):
         sample = DragenSample(name=rgid, phenotype='tumor', batch=self, rgid=rgid)
-        sample.bam = str(self.tumour_normal_base_dir / f'{rgid}_tumor.bam')
+        sample.bam = str(self.tumor_normal_base_dir / f'{rgid}_tumor.bam')
         self.tumors = [sample]
         if sample.name not in [s.name for s in self.parent_project.samples]:
             self.parent_project.samples.append(sample)
@@ -114,14 +114,14 @@ class DragenProject(BaseProject):
         # Get identifiers and paths
         batch_name = runs['subject_id']
         rgsm_n = runs['normal_run']['normal']
-        rgsm_t = runs['tumour_normal_run']['tumour']
-        tumour_normal_base_dir = runs['tumour_normal_run']['path']
+        rgsm_t = runs['tumor_normal_run']['tumor']
+        tumor_normal_base_dir = runs['tumor_normal_run']['path']
         normal_base_dir = runs['normal_run']['path']
         # Create batch with single sample
         batch = DragenBatch(
             rgsm_t,
             rgsm_n,
-            tumour_normal_base_dir,
+            tumor_normal_base_dir,
             normal_base_dir,
             name=batch_name,
             parent_project=parent_project,
@@ -130,7 +130,7 @@ class DragenProject(BaseProject):
         batch.find_somatic_vcf()
         batch.find_germline_vcf()
         batch.find_sv_vcf()
-        # Add tumour/normal and normal samples with BAMs
+        # Add tumor/normal and normal samples with BAMs
         batch.add_tumor(rgsm_t)
         batch.add_normal(rgsm_n)
         # Add QC files
