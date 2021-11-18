@@ -586,7 +586,7 @@ class BcbioProject(BaseProject):
         fp = self.find_in_log('project-summary.yaml')
         if fp:
             with open(fp) as f:
-                data = yaml.load(f)
+                data = yaml.safe_load(f)
             metrics_by_sample = dict()
             for s_data in data.get('samples', []):
                 metrics_by_sample[s_data['description']] = s_data.get('summary', dict()).get('metrics')
