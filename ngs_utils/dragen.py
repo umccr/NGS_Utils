@@ -88,11 +88,13 @@ class DragenBatch(BaseBatch):
         # Construct full path of QC files and store
         for qc_file_suffix in qc_files_tumor:
             qc_file = self.tumor_normal_base_dir / f'{self.tumor_normal_prefix}{qc_file_suffix}'
-            assert qc_file.exists()
+            if not qc_file.exists():
+                critical(f'DRAGEN QC file \'{qc_file}\' does not exist')
             self.tumors[0].qc_files.append(str(qc_file))
         for qc_file_suffix in qc_files_normal:
             qc_file = self.normal_base_dir / f'{self.normal_prefix}{qc_file_suffix}'
-            assert qc_file.exists()
+            if not qc_file.exists():
+                critical(f'DRAGEN QC file \'{qc_file}\' does not exist')
             self.normals[0].qc_files.append(str(qc_file))
 
     def all_qc_files(self):
