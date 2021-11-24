@@ -70,10 +70,13 @@ class DragenBatch(BaseBatch):
             '.vc_metrics.csv',
             '.ploidy_estimation_metrics.csv',
             '.fastqc_metrics.csv',
+            # NOTE(SW): eventhough the <prefix>.fragment_length_hist.csv file produced by the
+            # DRAGEN somatic pipeline contains both tumour and normal stats, MultiQC only includes
+            # the tumour stats. So normal stats must be obtained from the DRAGEN germline output.
+            '.fragment_length_hist.csv',
         ]
         qc_files_tumor = [
             *qc_files_shared,
-            '.fragment_length_hist.csv',
             '.mapping_metrics.csv',
             '.wgs_fine_hist_tumor.csv',
             '.wgs_coverage_metrics_tumor.csv',
