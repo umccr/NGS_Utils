@@ -15,9 +15,6 @@ jobs:
     if: "startsWith(github.event.head_commit.message, 'Bump version:')"
     name: Build conda packages
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.7, 3.8]
     defaults:
       run:
         shell: bash -l {0}
