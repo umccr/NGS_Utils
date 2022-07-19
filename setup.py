@@ -14,7 +14,7 @@ except ImportError:
     os.system('pip install versionpy')
     import versionpy
 
-version = versionpy.get_version(pkg)
+
 package_data = {
     pkg: versionpy.find_package_files('', pkg, skip_exts=['.sass', '.coffee'])
 }
@@ -22,12 +22,12 @@ package_data = {
 
 setup(
     name=pkg,
-    version=version,
+    version='2.9.2',
     author='Vlad Savelyev',
     author_email='vladislav.sav@gmail.com',
     description='Python utilities for bioinformatics tools and pipelines',
     long_description=open('README.md').read(),
-    url='https://github.com/vladsaveliev/NGS_Utils',
+    url='https://github.com/umccr/NGS_Utils',
     license='GPLv3',
     packages=[pkg],
     package_data=package_data,
