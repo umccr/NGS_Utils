@@ -170,6 +170,7 @@ vcf_ignore_lines = [
     '^##INFO=',
     '^##FILTER=',
     '^##contig=',
+    '^##vcfanno=',
 ]
 
 # Find and parse all elements containing json data, put data into a list and dumps the result.
