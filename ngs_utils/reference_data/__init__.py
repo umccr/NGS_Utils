@@ -109,6 +109,8 @@ def get_predispose_genes_bed(genome, is_critical=False, coding_only=False):
     return _get(f'key_genes/predispose_genes.{genome}.{"transcript" if not coding_only else "coding"}.bed',
                 is_critical=is_critical)
 
+def get_all_genes_bed():
+    return _get(f'all_genes/hg38_refseq_gencode_all_genes_v1.bed.gz')
 
 #############################
 ###### Known fusions ########
