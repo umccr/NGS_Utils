@@ -22,7 +22,7 @@ package_data = {
 
 setup(
     name=pkg,
-    version='2.10.1',
+    version='2.10.2',
     author='Vlad Savelyev',
     author_email='vladislav.sav@gmail.com',
     description='Python utilities for bioinformatics tools and pipelines',
