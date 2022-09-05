@@ -27,7 +27,7 @@ gh_url_raw <- with(umccr_genes, glue("https://raw.githubusercontent.com/{repo}/{
 umccr_genes <- gh_url_raw |>
   readr::read_tsv(col_names = "gene", col_types = "c") |>
   dplyr::pull(gene)
-ensembl_version <- 106
+ensembl_version <- 107
 ```
 
 ## Introduction
@@ -42,7 +42,7 @@ mart <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl", version
 attributes <- c("hgnc_symbol", "chromosome_name", "start_position", "end_position")
 filters <- "hgnc_symbol"
 values <- list("hgnc_symbol" = umccr_genes)
-# Total: 1,187
+# Total: 1,186
 d <- getBM(attributes=attributes, filters=filters, values=values, mart=mart) |>
   as_tibble() |>
   # get rid of rubbish (CHR_XXX_...)
@@ -50,7 +50,7 @@ d <- getBM(attributes=attributes, filters=filters, values=values, mart=mart) |>
   # RMRP duplicated, just keep the first one
   filter(!(hgnc_symbol == "RMRP" & start_position == 35657754))
 glimpse(d)
-# 70 unknown
+# 71 unknown
 unknown <- umccr_genes[!umccr_genes %in% d$hgnc_symbol]
 glimpse(unknown)
 ```
@@ -62,6 +62,7 @@ Let's manually grab the HGNC symbols or coordinates.
 ```{r}
 unknown1 <- tibble::tribble(
   ~gene,  ~alias,
+  "C15orf65", "PIERCE2",
   "C2orf40", "ECRG4",
   "C2orf44", "WDCP",
   "CARS", "CARS1",
@@ -144,7 +145,7 @@ dt_view <- function(x, caption = NULL) {
 ```
 
 ```{r}
-glimpse(unknown1) # created manually above (not echoed, will show below)
+glimpse(unknown1)
 values2 <- list("hgnc_symbol" = unknown1$alias)
 d2 <- getBM(attributes=attributes, filters=filters, values=values2, mart=mart) |>
   as_tibble() |>
@@ -165,7 +166,7 @@ unknown1 |>
 - Now join them:
 
 ```{r}
-# 1,232 = 1,187 + 63 - 18dups
+# 1,232 = 1,186 + 64 - 18dups
 d3 <- bind_rows(d, d2) |>
   distinct() # 18 dups removed where approved and synonym are in the umccr list
 glimpse(d3)
@@ -223,7 +224,7 @@ bed_out_unsorted <- glue("{bed_out}.bed")
 bed_out_sorted <- glue("{bed_out}.sort.bed")
 res |>
   mutate(start = start - pad, end = end + pad) |>
-  select(chr, start, end) |>
+  select(chr, start, end, gene) |>
   write_tsv(bed_out_unsorted, col_names = FALSE)
 system(glue("sort -k1,1V -k2,2n -k3,3n {bed_out_unsorted} > {bed_out_sorted}"))
 invisible(file.remove(bed_out_unsorted))
