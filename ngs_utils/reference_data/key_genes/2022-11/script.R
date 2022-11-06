@@ -3,6 +3,8 @@ require(here)
 require(glue)
 
 wd <- here("ngs_utils/reference_data/key_genes/2022-11")
+src_xl <- file.path(wd, "sources/Updated Gene List Sources and Details.xlsx") |>
+  readxl::read_xlsx()
 cancermine <- file.path(wd, "sources/cancermine_collated.tsv") |>
   read_tsv(col_types = cols(.default = "c", citation_count = "i"))
 cosmic <- bind_rows(
