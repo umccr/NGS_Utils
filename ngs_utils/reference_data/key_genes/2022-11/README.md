@@ -1,8 +1,5 @@
 Updating cancer gene lists (2022-November)
 
-| File | Source | Comments |
-| `cancerGeneList.tsv` | 
-
 |Alias |Path (in files)                                                |Link                                                                                                                          |Version (last date updated)                            |Accessed: |Notes                                                                                                  |Key: Green boxes= Update available. Red = No update available        |
 |:--------------------------------------|:--------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------|:---------|:------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------|
 | `CPSR_panel0`        |CPSR                                  |Change, updated list is now 1.0. Includes many many genes now. https://sigven.github.io/cpsr/articles/virtual_panels.html     |1.0 - Feb 2022 release                                 |44859     |Ensure the list isnt too inclusive                                                                     |cpsr_superpanel_2022_01.xlsx                                         |

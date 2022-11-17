@@ -11,8 +11,10 @@ cosmic <- bind_rows(
   file.path(wd, "sources/Census_all_Tier1.tsv") |> read_tsv(),
   file.path(wd, "sources/Census_all_Tier2.tsv") |> read_tsv())
 cpsr <- file.path(wd, "sources/cpsr_superpanel_2022_01.xlsx") |>
-  readxl::read_xlsx()
-
+  readxl::read_xlsx() |>
+  dplyr::select(symbol, ensembl_gene_id, entrezgene)
+predispose_genes <- file.path(wd, "../sources/predispose_genes.txt") |>
+  readr::read_tsv(col_names = "symbol", col_types = "c")
 ncg <- file.path(wd, "sources/NCG_cancerdrivers_annotation_supporting_evidence.tsv") |>
   read_tsv(col_types = cols(.default = "c"))
 
@@ -44,3 +46,15 @@ table(tempus_old$symbol %in% tempus$symbol)
 tempus_old[!tempus_old$symbol %in% tempus$symbol, ]
 # new ones not in old
 tempus[!tempus$symbol %in% tempus_old$symbol, ]
+
+
+##---- CPSR ----##
+predispose_genes$symbol %in% cpsr$symbol |>
+  table(useNA = "a")
+predispose_genes |>
+  dplyr::filter(!symbol %in% cpsr$symbol)
+predispose_genes |>
+  dplyr::left_join(cpsr) |>
+  dplyr::filter(!is.na(ensembl_gene_id)) |>
+  dplyr::select("ensembl_gene_id") |>
+  readr::write_tsv(file.path(wd, "output", "cpsr_ensembl_genes.tsv"), col_names = FALSE)
