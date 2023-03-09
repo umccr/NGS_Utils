@@ -14,6 +14,8 @@ library(stringr)
 library(dplyr)
 ```
 
+## New
+
 ```{r read_sources}
 wd <- here("ngs_utils/reference_data/key_genes/2022-11")
 # src_xl <- file.path(wd, "sources/Updated Gene List Sources and Details.xlsx") |>
@@ -53,37 +55,50 @@ d <- list(
     n = n(),
     sources = str_c(source, collapse = "|"),
   )
-
-d |>
-  ungroup() |>
-  count(n, name = "source_count")
 ```
 
+## Old
 
 ```{r diffs}
+wd2 <- here("ngs_utils/reference_data/key_genes")
+cancermine2 <- file.path(wd2, "sources/cancermine_collated.tsv") |>
+  read_tsv(col_types = cols(.default = "c", citation_count = "i"))
+cosmic2 <- bind_rows(
+  file.path(wd2, "sources/CancerGeneCensus_Tier1.tsv") |> read_tsv(),
+  file.path(wd2, "sources/CancerGeneCensus_Tier2.tsv") |> read_tsv())
+ncg2 <- file.path(wd2, "sources/NCG_cancerdrivers_annotation_supporting_evidence.tsv") |>
+  read_tsv(col_types = cols(.default = "c"))
+oncokb2 <- file.path(wd2, "sources/cancerGeneList.tsv") |>
+  read_tsv(col_types = cols(.default = "c"))
+tempus2 <- file.path(wd2, "sources/tempus.txt") |>
+  read_tsv(col_types = "c", col_names = "symbol") |>
+  mutate(symbol = sub("\\*+", "", symbol), # remove stars
+         symbol = sub("\\(", "", symbol), # remove parentheses
+         symbol = sub("\\)", "", symbol))
+
 # oncokb differences
 # 2022-10-28, 1,068 genes
-oncokb_old <- file.path(wd, "../sources/oncoKB_cancerGeneList.txt") |>
-  read_tsv(col_types = cols(.default = "c"))
-table(oncokb$`Hugo Symbol` %in% oncokb_old$`Hugo Symbol`)
-table(oncokb_old$`Hugo Symbol` %in% oncokb$`Hugo Symbol`)
-oncokb[!oncokb$`Hugo Symbol` %in% oncokb_old$`Hugo Symbol`, ] |> arrange(`Hugo Symbol`)
-oncokb_old[!oncokb_old$`Hugo Symbol` %in% oncokb$`Hugo Symbol`, ] |> arrange(`Hugo Symbol`)
-
-# TEMPUS differences
-tempus_old <- file.path(wd, "../sources/TEMPUS.genes") |>
-  read_tsv(col_types = "c", col_names = "symbol")
-
-table(tempus$symbol %in% tempus_old$symbol)
-table(tempus_old$symbol %in% tempus$symbol)
-
-# old ones not in new
-tempus_old[!tempus_old$symbol %in% tempus$symbol, ]
-# new ones not in old
-tempus[!tempus$symbol %in% tempus_old$symbol, ]
+#oncokb_old <- file.path(wd, "../sources/oncoKB_cancerGeneList.txt") |>
+#  read_tsv(col_types = cols(.default = "c"))
+#table(oncokb$`Hugo Symbol` %in% oncokb_old$`Hugo Symbol`)
+#table(oncokb_old$`Hugo Symbol` %in% oncokb$`Hugo Symbol`)
+#oncokb[!oncokb$`Hugo Symbol` %in% oncokb_old$`Hugo Symbol`, ] |> arrange(`Hugo Symbol`)
+#oncokb_old[!oncokb_old$`Hugo Symbol` %in% oncokb$`Hugo Symbol`, ] |> arrange(`Hugo Symbol`)
+#
+## TEMPUS differences
+#tempus_old <- file.path(wd, "../sources/TEMPUS.genes") |>
+#  read_tsv(col_types = "c", col_names = "symbol")
+#
+#table(tempus$symbol %in% tempus_old$symbol)
+#table(tempus_old$symbol %in% tempus$symbol)
+#
+## old ones not in new
+#tempus_old[!tempus_old$symbol %in% tempus$symbol, ]
+## new ones not in old
+#tempus[!tempus$symbol %in% tempus_old$symbol, ]
 ```
 
-- Prepare CPSR custom panel:
+## CPSR custom panel
 
 ```{r cpsr_custom_panel_prep}
 ##---- CPSR ----##

@@ -11,7 +11,7 @@ cosmic <- bind_rows(
   file.path(wd, "sources/Census_all_Tier1.tsv") |> read_tsv(),
   file.path(wd, "sources/Census_all_Tier2.tsv") |> read_tsv())
 cpsr <- file.path(wd, "sources/cpsr_superpanel_2022_01.xlsx") |>
-  readxl::read_xlsx() |>
+  readxl::read_xlsx(sheet = "cpsr_superpanel.grch38") |>
   dplyr::select(symbol, ensembl_gene_id, entrezgene)
 predispose_genes <- file.path(wd, "../sources/predispose_genes.txt") |>
   readr::read_tsv(col_names = "symbol", col_types = "c")
@@ -54,7 +54,7 @@ predispose_genes$symbol %in% cpsr$symbol |>
 predispose_genes |>
   dplyr::filter(!symbol %in% cpsr$symbol)
 predispose_genes |>
-  dplyr::left_join(cpsr) |>
+  dplyr::left_join(cpsr, by = "symbol") |>
   dplyr::filter(!is.na(ensembl_gene_id)) |>
   dplyr::select("ensembl_gene_id") |>
   readr::write_tsv(file.path(wd, "output", "cpsr_ensembl_genes.tsv"), col_names = FALSE)
