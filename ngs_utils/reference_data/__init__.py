@@ -107,7 +107,7 @@ def get_key_genes_bed_ensembl107():
 
 
 def get_predispose_genes_txt():
-    return _get('key_genes/sources/predispose_genes.txt')
+    return _get('key_genes/2022-11/output/cpsr_predisposition_genes_ensembl.txt')
 
 def get_predispose_genes_bed(genome, is_critical=False, coding_only=False):
     return _get(f'key_genes/predispose_genes.{genome}.{"transcript" if not coding_only else "coding"}.bed',

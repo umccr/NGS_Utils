@@ -57,4 +57,4 @@ predispose_genes |>
   dplyr::left_join(cpsr, by = "symbol") |>
   dplyr::filter(!is.na(ensembl_gene_id)) |>
   dplyr::select("ensembl_gene_id") |>
-  readr::write_tsv(file.path(wd, "output", "cpsr_ensembl_genes.tsv"), col_names = FALSE)
+  readr::write_tsv(file.path(wd, "output", "cpsr_predisposition_genes_ensembl.txt"), col_names = FALSE)
