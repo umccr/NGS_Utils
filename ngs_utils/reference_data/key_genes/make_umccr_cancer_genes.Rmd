@@ -11,10 +11,7 @@ library(tidyr)
 library(tibble)
 library(purrr)
 library(stringr)
-dplyr_funcs <- c("select", "mutate", "filter", "bind_rows", "rename",
-                 "transmute", "count", "group_by", "summarise", "n", "arrange",
-                 "distinct", "union_all", "left_join")
-library(dplyr, include.only = dplyr_funcs)
+library(dplyr)
 ```
 
 ```{r lists}
@@ -240,17 +237,17 @@ appris_hg19 <- glue("{repo}/hg19/appris_data.principal.txt") |>
 appris_hg38 <- glue("{repo}/hg38/appris_data.principal.txt") |>
   read_tsv(col_names = appris_cnames, col_types = cols(.default = "c"))
 
-appris_hg19_sum = appris_hg19 |>
+appris_hg19_sum <- appris_hg19 |>
   filter(str_detect(annotation, 'PRINCIPAL')) |>
   group_by(appris_symbol) |>
   summarise(PRINCIPAL_hg19 = str_c(enst, collapse = ','))
 
-appris_hg38_sum = appris_hg38 |>
+appris_hg38_sum <- appris_hg38 |>
   filter(str_detect(annotation, 'PRINCIPAL')) |>
   group_by(appris_symbol) |>
   summarise(PRINCIPAL_hg38 = str_c(enst, collapse = ','))
 
-genes_sum_appris = genes_sum |>
+genes_sum_appris <- genes_sum |>
   left_join(appris_hg19_sum, by = c('symbol' = 'appris_symbol')) |>
   left_join(appris_hg38_sum, by = c('symbol' = 'appris_symbol'))
 

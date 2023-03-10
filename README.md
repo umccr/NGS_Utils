@@ -1,8 +1,10 @@
 ## NGS Utils
 
-![Build](https://github.com/vladsaveliev/NGS_Utils/workflows/CI/badge.svg) [![Anaconda-Server Badge](https://anaconda.org/vladsaveliev/ngs_utils/badges/installer/conda.svg)](https://anaconda.org/vladsaveliev/ngs_utils) [![PyPI version](https://badge.fury.io/py/ngs_utils.svg)](https://pypi.org/project/ngs_utils)
+[![Conda version](https://anaconda.org/umccr/ngs_utils/badges/version.svg)](https://anaconda.org/umccr/ngs_utils)
+[![Conda released](https://anaconda.org/umccr/ngs_utils/badges/latest_release_date.svg)](https://anaconda.org/umccr/ngs_utils)
 
-Helper code for [UMCCR](https://github.com/umccr) and [AstraZeneca](https://github.com/AstraZeneca-NGS) bioinfomatics projects (e.g. [umccrise](https://github.com/umccr/umccrise), [Ovirage](https://github.com/umccr/ovirage), [NGS_Reporting](https://github.com/AstraZeneca-NGS/Clearup)).
+
+Helper code for UMCCR projects (e.g. [umccrise](https://github.com/umccr/umccrise) and [Oviraptor](https://github.com/umccr/oviraptor).
 
 Contains only python code without any heavy reference or test data, so supposed to be small and can be used as a lightweight dependency in other projects.
 
@@ -12,13 +14,7 @@ Contains only python code without any heavy reference or test data, so supposed 
 From conda:
 
 ```
-conda install -c vladsaveliev ngs_utils
-```
-
-From pip:
-
-```
-pip install ngs_utils
+conda install -c umccr ngs_utils
 ```
 
 From source for development:
