@@ -4,56 +4,85 @@ output: html_document
 ---
 
 ```{r}
-library(glue, include.only = "glue")
-library(here, include.only = "here")
-library(readr, include.only = c("read_tsv", "read_csv", "cols"))
-library(tidyr)
-library(tibble)
-library(purrr)
-library(stringr)
-library(dplyr)
+{
+  library(glue, include.only = "glue")
+  library(here, include.only = "here")
+  library(readr, include.only = c("read_tsv", "read_csv", "cols"))
+  library(tidyr, include.only = c("pivot_longer"))
+  library(tibble, include.only = c("tibble"))
+  library(purrr, include.only = c("map"))
+  library(dplyr, include.only = c("select", "filter", "mutate", "arrange", "left_join", "count"))
+}
 ```
 
 ## New
+
+| Source | Link | DateAccessed | Notes |
+|--------|------|--------|------|
+| CPSR | [CPSR-web](https://sigven.github.io/cpsr/cpsr_superpanel_2022_01.xlsx) | 2023-08 | Excel sheet with 433 genes, downloaded directly from website. |
+| Cancermine | [Cancermine-Zenodo](https://zenodo.org/record/7689627) | 2023-08 | Downloaded `cancermine_collated.tsv` from Zenodo link, 35,315 rows, md5: 03a... |
+| COSMIC | [COSMIC-download](https://cancer.sanger.ac.uk/cosmic/download) | 2023-08 | Download by logging in, selecting from the side panel `Projects`/`COSMIC`/`Cancer Gene Census`/`Cosmic_CancerGeneCensus_Tsv_v98_GRCh38.tar`. TSV has 738 genes. |
+| NCG | [NCG-download](http://network-cancer-genes.org/download.php) | 2023-08 | Download `Annotation and supporting evidence/3347 cancer drivers`. TSV has 8887 rows. |
+| OncoKB | [OncoKB-download](https://www.oncokb.org/cancerGenes) | 2023-08 | Download `Cancer Gene List`, TSV has 1,107 genes. |
+| Tempus | [Tempus-xT-](https://www.tempus.com/oncology/genomic-profiling/xt-xr/) | 2023-08 | Download `xT Gene List` PDF, copy gene columns, total 648 genes. |
 
 ```{r read_sources}
 wd <- here("ngs_utils/reference_data/key_genes/2022-11")
 # src_xl <- file.path(wd, "sources/Updated Gene List Sources and Details.xlsx") |>
 #   readxl::read_xlsx()
-cancermine <- file.path(wd, "sources/cancermine_collated.tsv") |>
-  read_tsv(col_types = cols(.default = "c", citation_count = "i"))
-cosmic <- bind_rows(
-  file.path(wd, "sources/Census_all_Tier1.tsv") |> read_tsv(),
-  file.path(wd, "sources/Census_all_Tier2.tsv") |> read_tsv())
 cpsr <- file.path(wd, "sources/cpsr_superpanel_2022_01.xlsx") |>
   readxl::read_xlsx() |>
   dplyr::select(symbol, ensembl_gene_id, entrezgene)
-predispose_genes <- file.path(wd, "../sources/predispose_genes.txt") |>
-  readr::read_tsv(col_names = "symbol", col_types = "c")
+cancermine <- file.path(wd, "sources/cancermine_collated.tsv") |>
+  readr::read_tsv(col_types = cols(.default = "c", citation_count = "i"))
+cosmic <- file.path(wd, "sources/Cosmic_CancerGeneCensus_v98_GRCh38.tsv") |>
+  readr::read_tsv(col_types = cols(.default = "c", GENOME_START = "i", GENOME_STOP = "i"))
 ncg <- file.path(wd, "sources/NCG_cancerdrivers_annotation_supporting_evidence.tsv") |>
-  read_tsv(col_types = cols(.default = "c"))
-oncokb <- file.path(wd, "sources/cancerGeneList.tsv") |>
-  read_tsv(col_types = cols(.default = "c"))
-tempus <- file.path(wd, "sources/tempus.txt") |>
-  read_tsv(col_types = "c", col_names = "symbol") |>
-  mutate(symbol = sub("\\*+", "", symbol), # remove stars
-         symbol = sub("\\(", "", symbol), # remove parentheses
-         symbol = sub("\\)", "", symbol))
+  readr::read_tsv(col_types = cols(.default = "c"))
+oncokb <- file.path(wd, "sources/oncokb_cancerGeneList_202308.tsv") |>
+  readr::read_tsv(col_types = cols(.default = "c"))
+tempus <- file.path(wd, "sources/tempus_2023-08.txt") |>
+  readr::read_tsv(col_types = "c")
+```
+
+```{r cancermine_prep}
+citation_count_min <- 3
+cancermine_prep <-
+  cancermine |>
+  dplyr::mutate(symbol = gene_normalized,
+         cm_cite = citation_count,
+         cm_og = role == "Oncogene",
+         cm_ts = role == "Tumor_Suppressor",
+         cm_driver = role == "Driver") |>
+  # dplyr::filter(citation_count >= citation_count_min | symbol == "SMURF1") |>
+  dplyr::select(symbol, starts_with("cm_")) |>
+  dplyr::group_by(symbol) |>
+  dplyr::summarise(
+    # sources = "cancermine",
+    cm_pub = dplyr::n()
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::arrange(dplyr::desc(cm_pub))
+    cm_total_cite = sum(cm_cite),
+    cm_og = mean(cm_og),
+    cm_ts = mean(cm_ts),
+    cm_driver = mean(cm_driver)) |>
+  dplyr::filter(cm_pub >= 2)
 ```
 
 ```{r df_with_src}
 d <- list(
-  cancermine = cancermine |> select(symbol = "gene_normalized") |> distinct() |> arrange(),
-  cosmic = cosmic |> select(symbol = "Gene Symbol") |> distinct() |> arrange(),
-  ncg = ncg |> select("symbol") |> distinct() |> arrange(),
-  oncokb = oncokb |> select(symbol = "Hugo Symbol") |> distinct() |> arrange(),
-  tempus = tempus |> distinct() |> arrange()
+  cancermine = cancermine |> dplyr::select(symbol = "gene_normalized") |> dplyr::distinct() |> dplyr::arrange(),
+  cosmic = cosmic |> dplyr::select(symbol = "GENE_SYMBOL") |> dplyr::distinct() |> arrange(),
+  ncg = ncg |> dplyr::select("symbol") |> dplyr::distinct() |> dplyr::arrange(),
+  oncokb = oncokb |> dplyr::select(symbol = "Hugo Symbol") |> dplyr::distinct() |> dplyr::arrange(),
+  tempus = tempus |> dplyr::distinct() |> dplyr::arrange()
 ) |>
-  bind_rows(.id = "source") |>
-  group_by(symbol) |>
-  mutate(
-    n = n(),
-    sources = str_c(source, collapse = "|"),
+  dplyr::bind_rows(.id = "source") |>
+  dplyr::group_by(symbol) |>
+  dplyr::mutate(
+    n = dplyr::n(),
+    sources = stringr::str_c(source, collapse = "|"),
   )
 ```
 
@@ -62,19 +91,21 @@ d <- list(
 ```{r diffs}
 wd2 <- here("ngs_utils/reference_data/key_genes")
 cancermine2 <- file.path(wd2, "sources/cancermine_collated.tsv") |>
-  read_tsv(col_types = cols(.default = "c", citation_count = "i"))
-cosmic2 <- bind_rows(
-  file.path(wd2, "sources/CancerGeneCensus_Tier1.tsv") |> read_tsv(),
-  file.path(wd2, "sources/CancerGeneCensus_Tier2.tsv") |> read_tsv())
+  readr::read_tsv(col_types = cols(.default = "c", citation_count = "i"))
+cosmic2 <- dplyr::bind_rows(
+  file.path(wd2, "sources/CancerGeneCensus_Tier1.tsv") |> readr::read_tsv(),
+  file.path(wd2, "sources/CancerGeneCensus_Tier2.tsv") |> readr::read_tsv())
 ncg2 <- file.path(wd2, "sources/NCG_cancerdrivers_annotation_supporting_evidence.tsv") |>
-  read_tsv(col_types = cols(.default = "c"))
-oncokb2 <- file.path(wd2, "sources/cancerGeneList.tsv") |>
-  read_tsv(col_types = cols(.default = "c"))
+  readr::read_tsv(col_types = readr::cols(.default = "c"))
+oncokb2 <- file.path(wd, "sources/cancerGeneList_202308.tsv") |>
+  readr::read_tsv(col_types = readr::cols(.default = "c"))
 tempus2 <- file.path(wd2, "sources/tempus.txt") |>
-  read_tsv(col_types = "c", col_names = "symbol") |>
-  mutate(symbol = sub("\\*+", "", symbol), # remove stars
-         symbol = sub("\\(", "", symbol), # remove parentheses
-         symbol = sub("\\)", "", symbol))
+  readr::read_tsv(col_types = "c", col_names = "symbol") |>
+  dplyr::mutate(
+    symbol = sub("\\*+", "", symbol), # remove stars
+    symbol = sub("\\(", "", symbol), # remove parentheses
+    symbol = sub("\\)", "", symbol)
+  )
 
 # oncokb differences
 # 2022-10-28, 1,068 genes
@@ -102,6 +133,8 @@ tempus2 <- file.path(wd2, "sources/tempus.txt") |>
 
 ```{r cpsr_custom_panel_prep}
 ##---- CPSR ----##
+predispose_genes <- file.path(wd, "../sources/predispose_genes.txt") |>
+  readr::read_tsv(col_names = "symbol", col_types = "c")
 predispose_genes$symbol %in% cpsr$symbol |>
   table(useNA = "a")
 predispose_genes |>

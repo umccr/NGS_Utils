@@ -37,13 +37,13 @@ We want to get their Ensembl gene coordinates. We can use [biomaRt](https://bioc
 to query the Ensembl `r ensembl_version` database:
 
 ```{r}
-mart <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl", version = ensembl_version)
+mart <- biomaRt::useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl", version = ensembl_version)
 # can also grab "ensembl_gene_id"
-attributes <- c("hgnc_symbol", "chromosome_name", "start_position", "end_position")
+attributes <- c("hgnc_symbol", "chromosome_name", "start_position", "end_position", "ensembl_gene_id")
 filters <- "hgnc_symbol"
 values <- list("hgnc_symbol" = umccr_genes)
 # Total: 1,186
-d <- getBM(attributes=attributes, filters=filters, values=values, mart=mart) |>
+d <- biomaRt::getBM(attributes=attributes, filters=filters, values=values, mart=mart) |>
   as_tibble() |>
   # get rid of rubbish (CHR_XXX_...)
   filter(!grepl("_", chromosome_name)) |>
